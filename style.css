@@ -1,0 +1,308 @@
+:root {
+    --bg-color: #f0f8ff;
+    /* AliceBlue */
+    --text-color: #333;
+    --primary-color: #007bff;
+
+    /* Heatmap Colors (Light Blue to Dark Blue) */
+    --heat-0: #eef2f5;
+    --heat-1: #cce5ff;
+    --heat-2: #66b2ff;
+    --heat-3: #0066cc;
+
+    --border-radius: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    position: relative;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40,50 Q10,20 50,20 Q80,10 90,40 Q100,80 60,90 Q10,100 40,50 Z' fill='rgba(255,255,255,0.8)'/%3E%3Ccircle cx='140' cy='40' r='12' fill='rgba(255,255,255,0.6)'/%3E%3Ccircle cx='170' cy='80' r='6' fill='rgba(255,255,255,0.9)'/%3E%3Cpath d='M140,150 C120,130 150,110 170,130 C190,150 160,190 140,150 Z' fill='rgba(255,255,255,0.5)'/%3E%3Ccircle cx='70' cy='160' r='15' fill='rgba(255,255,255,0.4)'/%3E%3Ccircle cx='40' cy='180' r='5' fill='rgba(255,255,255,0.7)'/%3E%3Ccircle cx='110' cy='120' r='4' fill='rgba(255,255,255,0.8)'/%3E%3C/svg%3E");
+    background-size: 250px 250px;
+    /* サイズは程よく見えるように */
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 12vh;
+    /* ほんの少し上にずらす工夫 */
+}
+
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    min-height: 550px;
+    /* 縦長になるように最低高さを設定 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* 中央寄せで隙間を固定 */
+    gap: 30px;
+    /* タイトルとカレンダーの隙間 */
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 30px 20px;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    /* タイトルを中央に */
+    align-items: center;
+}
+
+h1 {
+    font-size: 1.6rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.danger-btn {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day-header {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.day-header.saturday {
+    color: #5c9ce6;
+}
+
+.day-header.sunday {
+    color: #ff6b81;
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    background-color: var(--heat-0);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.3s;
+}
+
+.day-cell:hover {
+    transform: scale(1.05);
+}
+
+.day-cell.empty {
+    background: transparent;
+    cursor: default;
+}
+
+.today-marker {
+    border: 2px solid #ff6b81;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 107, 129, 0.4) inset;
+}
+
+.day-cell.heat-1 {
+    background-color: var(--heat-1);
+    color: #333;
+}
+
+.day-cell.heat-2 {
+    background-color: var(--heat-2);
+    color: white;
+}
+
+.day-cell.heat-3 {
+    background-color: var(--heat-3);
+    color: white;
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.mood-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.mood-btn {
+    font-size: 3rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.mood-btn:hover {
+    transform: scale(1.2);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.celebration-text {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-color);
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40,50 Q10,20 50,20 Q80,10 90,40 Q100,80 60,90 Q10,100 40,50 Z' fill='rgba(255,255,255,0.8)'/%3E%3Ccircle cx='140' cy='40' r='12' fill='rgba(255,255,255,0.6)'/%3E%3Ccircle cx='170' cy='80' r='6' fill='rgba(255,255,255,0.9)'/%3E%3Cpath d='M140,150 C120,130 150,110 170,130 C190,150 160,190 140,150 Z' fill='rgba(255,255,255,0.5)'/%3E%3Ccircle cx='70' cy='160' r='15' fill='rgba(255,255,255,0.4)'/%3E%3Ccircle cx='40' cy='180' r='5' fill='rgba(255,255,255,0.7)'/%3E%3Ccircle cx='110' cy='120' r='4' fill='rgba(255,255,255,0.8)'/%3E%3C/svg%3E");
+    background-size: 250px 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.soft-start-btn {
+    background: rgba(255, 255, 255, 0.7);
+    color: #5c9ce6;
+    border: 2px solid #cce5ff;
+    padding: 12px 36px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(92, 156, 230, 0.1);
+}
+
+.soft-start-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #5c9ce6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(92, 156, 230, 0.2);
+}
