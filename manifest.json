@@ -1,0 +1,21 @@
+{
+    "name": "Milk Tracker",
+    "short_name": "Milk",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#f0f8ff",
+    "theme_color": "#5c9ce6",
+    "icons": [
+      {
+        "src": "illustration.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "illustration.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
