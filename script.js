@@ -36,7 +36,7 @@ startBtn.addEventListener('click', () => {
     const month = new Date().getMonth();
     const day = new Date().getDate();
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
+    
     setTimeout(() => {
         openInputModal(dateStr, day);
     }, 150);
@@ -105,6 +105,9 @@ function renderCalendar() {
         // Apply dummy data colors
         applyHeatColor(cell, dateStr);
 
+        // 気分（mood）を反映
+        applyMoodEmoji(cell, dateStr);
+
         cell.addEventListener('click', () => openInputModal(dateStr, day));
         calendarEl.appendChild(cell);
     }
@@ -135,6 +138,21 @@ function applyHeatColor(cell, dateStr) {
         cell.classList.add('heat-2');
     } else if (total > 500) {
         cell.classList.add('heat-3');
+    }
+}
+
+function applyMoodEmoji(cell, dateStr) {
+    const data = mockData[dateStr];
+    if (data && data.mood) {
+        const emojiMap = {
+            'good': '😊',
+            'neutral': '😐',
+            'bad': '🤢'
+        };
+        const emojiEl = document.createElement('span');
+        emojiEl.className = 'mood-indicator';
+        emojiEl.textContent = emojiMap[data.mood] || '';
+        cell.appendChild(emojiEl);
     }
 }
 
@@ -171,7 +189,7 @@ nextToMoodBtn.addEventListener('click', () => {
 
     const total = morning + noon + night;
     if (total <= 0) {
-        alert('請輸入大於0ml的份量！🥛');
+        alert('請輸入大於0mlの份量！🥛');
         return;
     }
 
@@ -189,7 +207,7 @@ nextToMoodBtn.addEventListener('click', () => {
 moodBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const mood = e.currentTarget.dataset.mood;
-        mockData[selectedDateString].mood = mood;
+        mockData[selectedDateString].mood = mood; 
 
         // --- Firebaseへ保存 ---
         if (db) {

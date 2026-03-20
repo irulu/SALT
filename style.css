@@ -26,7 +26,6 @@ body {
     background-color: var(--bg-color);
     background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40,50 Q10,20 50,20 Q80,10 90,40 Q100,80 60,90 Q10,100 40,50 Z' fill='rgba(255,255,255,0.8)'/%3E%3Ccircle cx='140' cy='40' r='12' fill='rgba(255,255,255,0.6)'/%3E%3Ccircle cx='170' cy='80' r='6' fill='rgba(255,255,255,0.9)'/%3E%3Cpath d='M140,150 C120,130 150,110 170,130 C190,150 160,190 140,150 Z' fill='rgba(255,255,255,0.5)'/%3E%3Ccircle cx='70' cy='160' r='15' fill='rgba(255,255,255,0.4)'/%3E%3Ccircle cx='40' cy='180' r='5' fill='rgba(255,255,255,0.7)'/%3E%3Ccircle cx='110' cy='120' r='4' fill='rgba(255,255,255,0.8)'/%3E%3C/svg%3E");
     background-size: 250px 250px;
-    /* サイズは程よく見えるように */
     color: var(--text-color);
     display: flex;
     justify-content: center;
@@ -34,20 +33,16 @@ body {
     min-height: 100vh;
     padding: 20px;
     padding-bottom: 12vh;
-    /* ほんの少し上にずらす工夫 */
 }
 
 .app-container {
     width: 100%;
     max-width: 600px;
     min-height: 550px;
-    /* 縦長になるように最低高さを設定 */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* 中央寄せで隙間を固定 */
     gap: 30px;
-    /* タイトルとカレンダーの隙間 */
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -57,7 +52,6 @@ body {
 header {
     display: flex;
     justify-content: center;
-    /* タイトルを中央に */
     align-items: center;
 }
 
@@ -115,6 +109,7 @@ h1 {
 }
 
 .day-cell {
+    position: relative;
     aspect-ratio: 1;
     background-color: var(--heat-0);
     border-radius: 4px;
@@ -185,7 +180,6 @@ h1 {
         transform: scale(0.9);
         opacity: 0;
     }
-
     to {
         transform: scale(1);
         opacity: 1;
@@ -283,6 +277,14 @@ h1 {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+
+.mood-indicator {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    font-size: 0.85rem;
+    pointer-events: none;
 }
 
 .soft-start-btn {
